@@ -23,6 +23,6 @@ class BookControllerTest extends TestCase
 
         $response = $this->post(route('book.store'), $data);
 
-        $response->assertStatus(Response::HTTP_CREATED);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Author;
 use App\Models\Book;
+use App\Services\BookService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -31,14 +32,11 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBookRequest $request): RedirectResponse
+    public function store(StoreBookRequest $request, BookService $bookService): RedirectResponse
     {
         $validated = $request->validated();
 
-        $book = new Book();
-        $book->title = $validated['title'];
-        $book->author_id = $validated['author_id'];
-        $book->save();
+        $bookService->create($validated);
 
         return redirect(route('book.list', ['author' => $validated['author_id']]));
     }
@@ -61,12 +59,11 @@ class BookController extends Controller
      * @param \App\Models\Book $book
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateBookRequest $request, Book $book): RedirectResponse
+    public function update(UpdateBookRequest $request, Book $book, BookService $bookService): RedirectResponse
     {
         $validated = $request->validated();
 
-        $book->title = $validated['title'];
-        $book->save();
+        $bookService->update($book, $validated);
 
         return redirect(route('book.list', ['author' => $book->author_id]));
     }
